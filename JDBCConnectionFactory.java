@@ -1,4 +1,4 @@
-package jdbcboilerplate;
+package jdbcboilerplate.JDBCBoilerplate;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

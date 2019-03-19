@@ -1,4 +1,4 @@
-package jdbcboilerplate;
+package jdbcboilerplate.JDBCBoilerplate;
 
 public class Employee {
 

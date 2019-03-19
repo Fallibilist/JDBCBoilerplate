@@ -1,4 +1,4 @@
-package jdbcboilerplate;
+package jdbcboilerplate.JDBCBoilerplate;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,10 +9,10 @@ import java.util.List;
 
 public class EmployeeDAO implements BaseDAO {
 
-	public static final String CREATE = "INSERT INTO employee(first_name, last_name, age) VALUES(?,?,?)";
-	public static final String READ = "SELECT * FROM employee";
-	public static final String UPDATE = "UPDATE employee SET first_name = ?, last_name = ?, age = ? WHERE id = ?";
-	public static final String DELETE = "DELETE employee WHERE id = ?";
+	public static final String CREATE = "INSERT INTO public.\"Employee\" (first_name, last_name, age) VALUES(?,?,?)";
+	public static final String READ = "SELECT * FROM public.\"Employee\"";
+	public static final String UPDATE = "UPDATE public.\"Employee\" SET first_name = ?, last_name = ?, age = ? WHERE id = ?";
+	public static final String DELETE = "DELETE FROM public.\"Employee\" WHERE id = ?";
 
 	public void createEmployee(Employee employee) {
 		try (Connection connection = getConnection();
@@ -29,18 +29,20 @@ public class EmployeeDAO implements BaseDAO {
 		}
 	}
 
-	public void readEmployee() {
+	public List<Employee> readEmployee() {
+		List<Employee> employees = new ArrayList<>();
+		
 		try (Connection connection = getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(READ);
 				ResultSet resultSet = preparedStatement.executeQuery()) {
 
-			List<Employee> employees = new ArrayList<>();
 			while(resultSet.next()) {
 				Employee employee = new Employee();
-				
-				employee.setFirstName(resultSet.getString(1));
-				employee.setLastName(resultSet.getString(2));
-				employee.setAge(resultSet.getInt(3));
+
+				employee.setId(resultSet.getInt(1));
+				employee.setFirstName(resultSet.getString(2));
+				employee.setLastName(resultSet.getString(3));
+				employee.setAge(resultSet.getInt(4));
 
 //				OR
 //				employee.setFirstName(resultSet.getString("first_name"));
@@ -49,10 +51,11 @@ public class EmployeeDAO implements BaseDAO {
 				
 				employees.add(employee);
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		return employees;
 	}
 
 	public void updateEmployee(Employee employee) {
